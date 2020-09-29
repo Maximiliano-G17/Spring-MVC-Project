@@ -32,6 +32,9 @@
               <form:option value="Fotografia"/>
           </form:select>
         <br><br>
+        Nro Escuela: <form:input path="nroEscuela"/>
+        <form:errors path="nroEscuela"></form:errors>
+        <br><br>
         <input type="submit" value="Registrar">
         <br><br>
 		<a href="">Pagina Principal</a>

@@ -32,6 +32,7 @@ tr:nth-child(even) {
     <th>Email</th>
     <th>Direccion</th>
     <th>Materia</th>
+    <th>Nro Escuela</th>
   </tr>
   <tbody>
   	<c:forEach items = "${listaAlumnos}" var = "alumno" >
@@ -42,6 +43,7 @@ tr:nth-child(even) {
          	<td>${alumno.email}</td>
          	<td>${alumno.direccion}</td>
          	<td>${alumno.materia}</td>
+         	<td>${alumno.institucion}</td>
          </tr>
     </c:forEach>
   </tbody>

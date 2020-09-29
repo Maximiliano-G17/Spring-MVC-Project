@@ -3,7 +3,10 @@ package models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -42,13 +45,22 @@ public class Alumno{
 	@Column(name="Materia")
 	private String materia;
 	
-	public Alumno(String dni, String nombre, String apellido, String email,String direccion,String materia) {
+	@ManyToOne
+	@JoinColumn(name="NroEscuela_ID")
+	private Institucion institucion;
+	
+	@Transient
+	@NotNull(message=" Campo Requerido!")
+	private String nroEscuela;
+	
+	public Alumno(String dni, String nombre, String apellido, String email,String direccion,String materia,String nroEscuela) {
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
 		this.email = email;
 		this.materia=materia;
+		this.nroEscuela=nroEscuela;
 	}	
 
 	public Alumno() {
@@ -101,6 +113,22 @@ public class Alumno{
 
 	public void setMateria(String materia) {
 		this.materia = materia;
+	}
+	
+	public Institucion getInstitucion() {
+		return institucion;
+	}
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
+	}
+	
+	public String getNroEscuela() {
+		return nroEscuela;
+	}
+
+	public void setNroEscuela(String nroEscuela) {
+		this.nroEscuela = nroEscuela;
 	}
 
 	@Override

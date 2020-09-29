@@ -14,16 +14,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import models.Alumno;
+import models.Institucion;
 import service.AlumnoService;
+import service.InstitucionService;
 
 @Controller
 public class HomeController {
 	
 	@Autowired
 	private AlumnoService alumnoService;
+		
+	@Autowired
+	private InstitucionService intitucionService;
 
 	@GetMapping("/")
 	public ModelAndView paginaPrincipal(){
@@ -43,7 +49,7 @@ public class HomeController {
 	
 	@PostMapping("/paginaConfirmarRegistro")
 	public String confirmarRegistro(@Valid @ModelAttribute("alumno") Alumno alumno,BindingResult resultado){
-		if(resultado.hasErrors()){
+		if(resultado.hasErrors() || !intitucionService.existeInsticion(alumno.getNroEscuela())){
 			return "registrar";			
 		}else{
 			alumnoService.registrarAlumno(alumno);
@@ -90,5 +96,11 @@ public class HomeController {
 	public void recortaEspaciosEnBlanco(WebDataBinder binder){
 		StringTrimmerEditor recorta =new StringTrimmerEditor(true);
 		binder.registerCustomEditor(String.class, recorta);
+	}
+	
+	@RequestMapping("/insertarInstitucion")
+	public void insertarInstitucion(){
+		Institucion insti=new Institucion("105","Escuela Yrigoyen","Maipu","424242");
+		intitucionService.insertarInstitucion(insti);
 	}
 }

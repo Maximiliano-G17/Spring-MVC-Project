@@ -14,6 +14,9 @@ public class AlumnoService {
 	@Autowired
 	private AlumnoDAO alumnoDAO;
 	
+	@Autowired
+	private InstitucionService intitucionService;
+	
 	public List leerAlumnos(){
 		return alumnoDAO.leerAlumnos();
 	}

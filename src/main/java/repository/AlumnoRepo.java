@@ -3,38 +3,38 @@ package repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
 import dao.AlumnoDAO;
 import models.Alumno;
+import models.Institucion;
 
 @Repository
 public class AlumnoRepo implements AlumnoDAO{
 
 	private SessionFactory miFactory;
 	private Session miSession;
-	
-	private Session obtenerSession() {
-		miFactory=new AnnotationConfiguration().configure("database/hibernate.cfg.xml").addAnnotatedClass(Alumno.class).buildSessionFactory();
-		miSession =miFactory.openSession();
-		return miSession;
-	}
-		
+			
 	public void insertar(Alumno alumnoRegistrar) {
 		obtenerSession();
 		System.out.println("registrando..");
 		try{
-			Alumno alumno=new Alumno(alumnoRegistrar.getDni(),alumnoRegistrar.getNombre(),alumnoRegistrar.getApellido()
-			,alumnoRegistrar.getEmail(),alumnoRegistrar.getDireccion(),alumnoRegistrar.getMateria());
 			miSession.beginTransaction();
+			Alumno alumno=new Alumno(alumnoRegistrar.getDni(),alumnoRegistrar.getNombre(),alumnoRegistrar.getApellido()
+			,alumnoRegistrar.getEmail(),alumnoRegistrar.getDireccion(),alumnoRegistrar.getMateria(),alumnoRegistrar.getNroEscuela());
+			String nro = alumnoRegistrar.getNroEscuela();
+			Institucion institucion = (Institucion) miSession.get(Institucion.class, nro);
+			institucion.agregarAlumnos(alumno);
 			miSession.save(alumno);
 			miSession.getTransaction().commit();
 			System.out.println("Registro insertado correctamente en BBDD");			
-		}catch(Exception e){
+		}catch(HibernateException e){
 			System.out.println("error");
 			miSession.getTransaction().rollback();
 			e.printStackTrace();		
@@ -50,7 +50,7 @@ public class AlumnoRepo implements AlumnoDAO{
 		try{		
 			miSession.beginTransaction();
 			listaAlumnos = miSession.createQuery("from Alumno").list();	
-		}catch(Exception e){
+		}catch(ConstraintViolationException e){
 			System.out.println("error");
 			miSession.getTransaction().rollback();
 			e.printStackTrace();
@@ -100,5 +100,13 @@ public class AlumnoRepo implements AlumnoDAO{
 			miSession.close();
 			miFactory.close();
 		}		
+	}
+	
+	private Session obtenerSession() {
+		miFactory=new AnnotationConfiguration().configure("database/hibernate.cfg.xml").addAnnotatedClass(Alumno.class)
+				.addAnnotatedClass(Institucion.class)
+				.buildSessionFactory();
+		miSession =miFactory.openSession();
+		return miSession;
 	}
 }
