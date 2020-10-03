@@ -29,7 +29,7 @@ public class HomeController {
 	private AlumnoService alumnoService;
 		
 	@Autowired
-	private InstitucionService intitucionService;
+	private InstitucionService institucionService;
 
 	@GetMapping("/")
 	public ModelAndView paginaPrincipal(){
@@ -49,7 +49,7 @@ public class HomeController {
 	
 	@PostMapping("/paginaConfirmarRegistro")
 	public String confirmarRegistro(@Valid @ModelAttribute("alumno") Alumno alumno,BindingResult resultado){
-		if(resultado.hasErrors() || !intitucionService.existeInsticion(alumno.getNroEscuela())){
+		if(resultado.hasErrors() || !institucionService.existeInsticion(alumno.getNroEscuela())){
 			return "registrar";			
 		}else{
 			alumnoService.registrarAlumno(alumno);
@@ -97,10 +97,21 @@ public class HomeController {
 		StringTrimmerEditor recorta =new StringTrimmerEditor(true);
 		binder.registerCustomEditor(String.class, recorta);
 	}
+
 	
+	//--------------------------METODOS INSTITUCION--------------------------		
 	@RequestMapping("/insertarInstitucion")
 	public void insertarInstitucion(){
 		Institucion insti=new Institucion("105","Escuela Yrigoyen","Maipu","424242");
-		intitucionService.insertarInstitucion(insti);
+		institucionService.insertarInstitucion(insti);
+	}
+	
+	@RequestMapping("/datosEscuela")
+	public ModelAndView mostrarDatosInstitucion(){
+		ModelAndView mav=new ModelAndView();	
+		List insti = institucionService.leerInstituciones();
+		mav.addObject("listaInstituciones", insti);
+		mav.setViewName("datosInstitucion");
+		return  mav;
 	}
 }

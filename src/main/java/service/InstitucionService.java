@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,14 @@ public class InstitucionService {
 		institucionDAO.eliminar(nroEscuela);
 	}
 	
-	public void leerInstitucion(String nroEscuela){
-		institucionDAO.leerInstitucion(nroEscuela);
+	public Institucion leerInstitucion(String nroEscuela){
+		return institucionDAO.leerInstitucion(nroEscuela);
+	}
+	public List leerInstituciones(){
+		return institucionDAO.leerInstituciones();
+	}
+	
+	public List cantAlumnosPorInstitucion(){
+		return institucionDAO.cantAlumnosPorInstitucion();
 	}
 }

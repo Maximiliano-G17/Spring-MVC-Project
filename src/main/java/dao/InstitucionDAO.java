@@ -11,7 +11,7 @@ public interface InstitucionDAO {
 	public List leerInstituciones();
 	public Institucion leerInstitucion(String NroEscuela);
 	public List leerAlumnosInstitucion(String NroEscuela);
-	public List leerAlumnosInstituciones();
+	public List cantAlumnosPorInstitucion();
 	public Object existe(String nroEscuela);
 	public void eliminar(String nroEscuela);
 

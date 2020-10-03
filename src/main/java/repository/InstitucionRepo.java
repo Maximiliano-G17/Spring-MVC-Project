@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
 import dao.InstitucionDAO;
@@ -42,7 +43,20 @@ public class InstitucionRepo implements InstitucionDAO{
 	}
 
 	public List leerInstituciones() {
-		return null;
+		obtenerSession();
+		List<Institucion> listaInstituciones=new ArrayList<Institucion>();
+		try{		
+			miSession.beginTransaction();
+			listaInstituciones = miSession.createQuery("from Institucion").list();	
+		}catch(Exception e){
+			System.out.println("error");
+			miSession.getTransaction().rollback();
+			e.printStackTrace();
+		}finally{
+			miSession.close();
+			miFactory.close();
+		}		
+		return listaInstituciones;
 	}
 
 	public Institucion leerInstitucion(String nroEscuela) {
@@ -84,13 +98,13 @@ public class InstitucionRepo implements InstitucionDAO{
 		return query.list();
 	}
 	
-	public List leerAlumnosInstituciones() {
+	public List cantAlumnosPorInstitucion() {
 		obtenerSession();
 		
-		List<Alumno> listaAlumnos=new ArrayList<Alumno>();
+		List<Long> listaAlumnos=new ArrayList<Long>();
 		try{		
 			miSession.beginTransaction();
-			listaAlumnos = miSession.createQuery("from Alumno").list();	
+			listaAlumnos = miSession.createQuery("select count(a.institucion.nroEscuela) from Alumno a group by a.institucion.nroEscuela").list();
 		}catch(Exception e){
 			System.out.println("error");
 			miSession.getTransaction().rollback();
@@ -98,7 +112,7 @@ public class InstitucionRepo implements InstitucionDAO{
 		}finally{
 			miSession.close();
 			miFactory.close();
-		}		
+		}
 		return listaAlumnos;
 	}
 	

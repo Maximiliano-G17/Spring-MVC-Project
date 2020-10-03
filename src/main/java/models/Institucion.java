@@ -73,10 +73,9 @@ public class Institucion {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-
-	@Override
-	public String toString() {
-		return nroEscuela;
+	
+	public List<Alumno> getAlumnos() {
+		return alumnos;
 	}
 	
 	public void agregarAlumnos(Alumno alumno){
@@ -85,5 +84,11 @@ public class Institucion {
 		}
 		alumnos.add(alumno);
 		alumno.setInstitucion(this);
+	}
+
+	@Override
+	public String toString() {
+		return "Institucion [nroEscuela=" + nroEscuela + ", nombre=" + nombre + ", direccion=" + direccion
+				+ ", telefono=" + telefono + "]";
 	}
 }
